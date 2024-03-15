@@ -1,20 +1,25 @@
-FROM python:3.13.0a4-alpine3.19
+FROM cgr.dev/chainguard/python:latest-dev as builder
 
-LABEL description="Desafio day2" \
-      stack="Python" \
-      version="3.13.0a4-alpine3.19"
+WORKDIR /app
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+COPY requirements.txt .
 
-COPY requirements.txt /usr/src/app/
-RUN pip install --no-cache-dir -r requirements.txt && pip install werkzeug===2.2.2
+RUN pip install --no-cache-dir -r requirements.txt --user
+
+
+
+FROM cgr.dev/chainguard/python:latest
+
+WORKDIR /app
+
+# Make sure you update Python version in path
+COPY --from=builder /home/nonroot/.local/lib/python3.12/site-packages /home/nonroot/.local/lib/python3.12/site-packages
+COPY --from=builder /home/nonroot/.local/bin  /home/nonroot/.local/bin
+ENV PATH=$PATH:/home/nonroot/.local/bin
 
 COPY app.py .
-COPY templates/ templates/
 COPY static/ static/
-
-EXPOSE 5000
+COPY templates/ templates/
 
 ENV REDIS_HOST="redis-server"
 
