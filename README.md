@@ -52,3 +52,80 @@ Para tanto iremos utilizar as imagens da [**Chainguard**](https://www.chainguard
 **Tamanho:** Imagens menores significam downloads e inicializações mais rápidos.\
 **Eficiência:** Menos processos em execução significam que seus contêineres consomem menos recursos.<p>
 
+### Dockerfile
+Vamos criar o arquivo **Dockerfile.app** para a geração da imagem distroless com multistage build, deixando-a com um tamanho pequeno e sem vulnerabilidades.
+
+```
+FROM cgr.dev/chainguard/python:latest-dev as builder
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt --user
+
+
+FROM cgr.dev/chainguard/python:latest
+
+WORKDIR /app
+
+# Make sure you update Python version in path
+COPY --from=builder /home/nonroot/.local/lib/python3.12/site-packages /home/nonroot/.local/lib/python3.12/site-packages
+COPY --from=builder /home/nonroot/.local/bin  /home/nonroot/.local/bin
+ENV PATH=$PATH:/home/nonroot/.local/bin
+
+COPY app.py .
+COPY static/ static/
+COPY templates/ templates/
+
+ENV REDIS_HOST="redis-server"
+
+ENTRYPOINT ["flask", "run", "--host=0.0.0.0"]
+```
+
+Executando o Build da imagem
+
+```
+$ docker build -t israeldoamaral/linuxtips-giropops-senhas:1.0 -f Dockerfile.app .
+```
+
+O projeto também precisa persistir os dados, para isso vamos cria uma imagem do Redis. Crie o arquivo **Dockerfile.redis**
+
+```
+FROM  cgr.dev/chainguard/redis 
+
+EXPOSE 6379
+
+ENTRYPOINT [ "redis-server" ]
+```
+
+Executando o Build da imagem do Redis
+
+```
+$ docker build -t israeldoamaral/redis-server -f Dockerfile.redis .
+```
+
+
+## Verificando as vulnerabilidades das imagens
+> [!NOTE]
+Para verificar as vulnerabilidades nas imagens vamos utilizar o [**Trivy**](https://aquasecurity.github.io/trivy/v0.18.3/)<p>
+Trivy é um scanner de vulnerabilidade simples e abrangente para contêineres e outros artefatos.
+
+```
+$ trivy image israeldoamaral/linuxtips-giropops-senhas:1.0
+```
+![print1](./prints/1.png)
+
+```
+$ trivy image israeldoamaral/redis-server
+```
+![print2](./prints/2.png)
+
+
+Com as imagens verificadas e sem vulnerabilidades, vamos fazer o Push das imagens **linuxtips-giropops-senhas:1.0** e **redis-server** para o repositório no DockerHub
+
+```
+docker login
+docker push israeldoamaral/linuxtips-giropops-senhas:1.0 
+docker push israeldoamaral/redis-server
+```
