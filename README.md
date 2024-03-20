@@ -41,6 +41,7 @@ sudo chmod +x /usr/local/bin/cosign
 
 https://github.com/badtuxx/giropops-senhas
 
-## Criação da Imagem
+## Criação da Imagem Docker
 > [!NOTE]
-> **Vamos criar a imagem da aplicação 
+> Vamos criar a imagem da aplicação utilizando as melhores práticas como:
+**Multistage build**
