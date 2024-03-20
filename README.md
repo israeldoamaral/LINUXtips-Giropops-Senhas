@@ -43,5 +43,12 @@ https://github.com/badtuxx/giropops-senhas
 
 ## Criação da Imagem Docker
 > [!NOTE]
-> Vamos criar a imagem da aplicação utilizando as melhores práticas como:
-**Multistage build**
+> Vamos criar a imagem da aplicação utilizando as melhores práticas como:<p>
+**Multistage build** - Técnica para criar imagens Docker menores e mais eficientes. Permite que você crie um Dockerfile com vários estágios, cada um usando uma imagem base diferente.<p>
+**Imagem Distroless** - é uma classe especial de imagem Docker que se destaca por sua abordagem minimalista. Ao contrário das imagens tradicionais, que incluem um sistema operacional completo (como Debian ou Ubuntu), as imagens Distroless contêm apenas o necessário para executar uma aplicação específica.
+Para tanto iremos utilizar as imagens da [**Chainguard**](https://www.chainguard.dev/chainguard-images)
+>- Isso traz vários benefícios:\
+**Segurança:** Menos software significa menos superfície de ataque para hackers explorarem.\
+**Tamanho:** Imagens menores significam downloads e inicializações mais rápidos.\
+**Eficiência:** Menos processos em execução significam que seus contêineres consomem menos recursos.<p>
+
