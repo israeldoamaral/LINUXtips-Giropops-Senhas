@@ -129,3 +129,9 @@ docker login
 docker push israeldoamaral/linuxtips-giropops-senhas:1.0 
 docker push israeldoamaral/redis-server
 ```
+
+## Assinando as imagens com o cosign
+>
+> [!NOTE]
+jsajasjdsajgdajsgdaj
+> 
