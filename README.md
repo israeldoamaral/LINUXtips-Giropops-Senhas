@@ -131,7 +131,7 @@ docker push israeldoamaral/redis-server
 ```
 
 ## Assinando as imagens com o cosign
->
 > [!NOTE]
-jsajasjdsajgdajsgdaj
-> 
+O Cosign é uma ferramenta de assinatura e verificação de contêineres open-source desenvolvida pela [**Sigstore**](https://docs.sigstore.dev/). Sigstore é uma comunidade de código aberto que se concentra em fornecer ferramentas e práticas recomendadas para melhorar a transparência e a segurança do software. O objetivo principal do Cosign é permitir que os desenvolvedores assinem digitalmente imagens de contêineres para garantir sua autenticidade e integridade.
+
+[!OBS]
