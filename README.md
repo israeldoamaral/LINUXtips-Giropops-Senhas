@@ -105,6 +105,15 @@ Executando o Build da imagem do Redis
 $ docker build -t israeldoamaral/redis-server -f Dockerfile.redis .
 ```
 
+## Testando as imagens
+Vamos testar localmente se as imagens da aplicação e do Redis estão funcionando.
+
+```
+docker network create app_network
+docker run -d --name redis-server --network app_network israeldoamaral/redis-server
+docker run -it --rm -p 5000:5000 --network app_network --name app israeldoamaral/linuxtips-giropops-senhas:1.0
+```
+![print0](./prints/0.png)
 
 ## Verificando as vulnerabilidades das imagens
 > [!NOTE]
@@ -114,7 +123,7 @@ Trivy é um scanner de vulnerabilidade simples e abrangente para contêineres e 
 ```
 $ trivy image israeldoamaral/linuxtips-giropops-senhas:1.0
 ```
-![print1](./prints/1.png)
+![print](./prints/1.png)
 
 ```
 $ trivy image israeldoamaral/redis-server
@@ -135,5 +144,21 @@ docker push israeldoamaral/redis-server
 O Cosign é uma ferramenta de assinatura e verificação de contêineres open-source desenvolvida pela [**Sigstore**](https://docs.sigstore.dev/). Sigstore é uma comunidade de código aberto que se concentra em fornecer ferramentas e práticas recomendadas para melhorar a transparência e a segurança do software. O objetivo principal do Cosign é permitir que os desenvolvedores assinem digitalmente imagens de contêineres para garantir sua autenticidade e integridade.
 
 > [!WARNING]
-JSDJGSJGDSADS
+As imagens devem estar presente no registry(público ou privado), neste caso, no DockerHub para permitir a assinatura e verificação.
+
+### Gerando as chaves
+```
+cosign generate-key-pair --output-key-prefix giropops-senha
+cosign generate-key-pair --output-key-prefix redis-server
+```
+### Assinando as imagens
+```
+cosign sign --key giropops-senha.key israeldoamaral/linuxtips-giropops-senhas:1.0 
+cosign sign --key redis-server.key israeldoamaral/redis-server
+```
+### Validando a assinatura
+```
+cosign verify --key giropops-senha.pub israeldoamaral/linuxtips-giropops-senhas:1.0
+cosign verify --key redis-server.pub israeldoamaral/redis-server:latest
+```
 
