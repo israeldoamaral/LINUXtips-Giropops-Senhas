@@ -1,4 +1,4 @@
-# LINUXtips-Giropops-Senhas
+# PICK - Programa Intensivo em Containers e Kubernetes da Linuxtips!!!
 Repo para a prática do projeto PICK - Programa Intensivo de Docker e Kubernetes 2024.
 
 
